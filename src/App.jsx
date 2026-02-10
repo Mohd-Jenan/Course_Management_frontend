@@ -9,6 +9,7 @@ import TeacherDashboard from './components/Dashboard/Teacher/TeacherDashboard'
 import AdminDashboard from './components/Dashboard/Admin/AdminDashboard'
 import Profile from './features/auth/pages/Profile'
 import AllCourses from './components/courses/AllCourses'
+import AllUsers from './components/Users/AllUsers'
 function App() {
  
 
@@ -47,6 +48,7 @@ function App() {
       } 
       />
       <Route path='/allcourses' element={<AllCourses/>} />
+      <Route path='/allusers' element={<AllUsers/>} />
     </Routes>
     </BrowserRouter>
       </> 

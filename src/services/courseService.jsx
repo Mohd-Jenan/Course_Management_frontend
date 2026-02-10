@@ -18,3 +18,8 @@ export const deleteCourse = async (_id) => {
   const res = await axiosInstance.delete(`/course/delete/${_id}`)
   return res.data;
 };
+
+export const dashboadCounts=async()=>{
+  const res=await axiosInstance.get('/course/counts')
+  return res.data
+}
