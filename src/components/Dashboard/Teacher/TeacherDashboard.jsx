@@ -1,17 +1,42 @@
 import ProfileSidebar from "../Student/profileSidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavItem from "../Student/Sidebar";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { dashboadCounts } from "../../../services/courseService";
 const TeacherDashboard = () => {
+  const[counts,setCounts]=useState({ totalCourse: 0,totalStudent:0,aasignments:0})
   const [openProfile, setOpenProfile] = useState(false);
   const user=JSON.parse(localStorage.getItem("user"))
+  const navigate=useNavigate()
+  const handleCourse=()=>{
+    navigate('/allcourses')
+  }
+  const handleAssignment=()=>{
+    navigate('/assignment')
+  }
+  const fetchDashboardCount=async()=>{
+    try{
+      const result=await dashboadCounts()
+      setCounts(result)
+    }
+    catch(err){
+      toast.error("failed to load dashboard counts")
+    }
+  }
+  useEffect(()=>{
+    fetchDashboardCount()
+  },[])
+
+  
   return (
     <div className="flex min-h-screen bg-gray-100">
       <aside className="w-64 bg-white shadow-lg hidden md:block">
         <div className="p-6 text-xl font-bold text-indigo-600">EduManage</div>
         <nav className="px-4 space-y-2">
           <NavItem title="Dashboard" />
-          <NavItem title="Courses" />
-          <NavItem title="Assignments" />
+          <NavItem title="Courses" onClick={handleCourse}/>
+          <NavItem title="Assignments" onClick={handleAssignment} />
           <NavItem title="Students" />
           
         </nav>
@@ -39,7 +64,7 @@ const TeacherDashboard = () => {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           <div className="bg-white p-6 rounded-lg shadow">
             <p className="text-gray-500 text-sm">Total Courses</p>
-            <h2 className="text-3xl font-bold text-indigo-600">6</h2>
+            <h2 className="text-3xl font-bold text-indigo-600">{counts.totalCourse}</h2>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow">

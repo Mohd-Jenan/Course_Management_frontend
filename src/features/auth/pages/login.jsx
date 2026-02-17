@@ -62,15 +62,6 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
           />
-          <p className="text-sm text-center mb-2">
-            New user?{" "}
-            <span
-              className="text-blue-600 cursor-pointer"
-              onClick={() => navigate("/signup")}
-            >
-              Signup
-            </span>
-          </p>
           <button 
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded cursor-pointer"

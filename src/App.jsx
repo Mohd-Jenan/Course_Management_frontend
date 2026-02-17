@@ -10,6 +10,7 @@ import AdminDashboard from './components/Dashboard/Admin/AdminDashboard'
 import Profile from './features/auth/pages/Profile'
 import AllCourses from './components/courses/AllCourses'
 import AllUsers from './components/Users/AllUsers'
+import CreateAssignment from './components/assignment/CreateAssignment'
 function App() {
  
 
@@ -47,8 +48,24 @@ function App() {
     </ProtectedRoutes>
       } 
       />
-      <Route path='/allcourses' element={<AllCourses/>} />
-      <Route path='/allusers' element={<AllUsers/>} />
+      <Route path='/allcourses' element={
+      <ProtectedRoutes allowedRoles={["admin"]}>
+      <AllCourses />
+    </ProtectedRoutes>
+      } 
+      />
+      <Route path='/allusers' element={
+      <ProtectedRoutes allowedRoles={["admin"]}>
+      <AllUsers />
+    </ProtectedRoutes>
+      } 
+      />
+       <Route path='/assignment' element={
+      <ProtectedRoutes allowedRoles={["teacher"]}>
+      <CreateAssignment />
+    </ProtectedRoutes>
+      } 
+      />
     </Routes>
     </BrowserRouter>
       </> 

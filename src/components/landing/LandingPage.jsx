@@ -1,14 +1,92 @@
 import { BookOpen, Users, GraduationCap, ArrowRight } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function LandingPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const validate = () => {
+    let newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
+    ) {
+      newErrors.email = "Invalid email address";
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "Message cannot be empty";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const validationErrors = validate();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      console.log("Form Data:", formData);
+      toast.success("Message sent successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+      });
+    }
+  };
   const navigate = useNavigate();
+  const handleButton=()=>{
+    navigate('/login')
+  }
+  const handleDashboard=()=>{
+    const user=JSON.parse(localStorage.getItem("user"))
+    if(!user){
+      navigate('/login')
+      return
+    }
+    if(user.role==='admin'){
+      navigate('/admin/dashboard')
+    }
+    else if(user.role==='student'){
+      navigate('/student/dashboard')
+    }
+    else if(user.role==='teacher'){
+      navigate('/teacher/dashboard')
+    }
+    else{
+      navigate('/login')
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-8 py-4 bg-white shadow-sm">
         <h1 className="text-xl font-bold text-indigo-600">EduManage</h1>
         <div className="space-x-6">
+          <a href="#features" className="text-gray-600 hover:text-indigo-600" onClick={handleDashboard} >
+            Dashboard
+          </a>
           <a href="#features" className="text-gray-600 hover:text-indigo-600">
             Features
           </a>
@@ -36,7 +114,7 @@ export default function LandingPage() {
           Manage students, courses, enrollments, and progress in one powerful
           platform.
         </p>
-        <button className="inline-flex items-center gap-2 px-6 py-3 text-indigo-600 bg-white rounded-xl font-semibold hover:bg-gray-100">
+        <button className="inline-flex items-center gap-2 px-6 py-3 text-indigo-600 bg-white rounded-xl font-semibold hover:bg-gray-100" onClick={handleButton}>
           Get Started <ArrowRight size={18} />
         </button>
       </section>
@@ -102,25 +180,48 @@ export default function LandingPage() {
                 </p>
               </div>
             </div>
-            <form className="bg-white p-6 rounded-2xl shadow space-y-4">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white p-6 rounded-2xl shadow space-y-4"
+            >
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Full Name
                 </label>
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Enter your name"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                    errors.name
+                      ? "border-red-500 focus:ring-red-500"
+                      : "focus:ring-indigo-600"
+                  }`}
                 />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-1">Email</label>
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Enter your email"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                    errors.email
+                      ? "border-red-500 focus:ring-red-500"
+                      : "focus:ring-indigo-600"
+                  }`}
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
               </div>
 
               <div>
@@ -129,9 +230,19 @@ export default function LandingPage() {
                 </label>
                 <textarea
                   rows="4"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Write your message"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                    errors.message
+                      ? "border-red-500 focus:ring-red-500"
+                      : "focus:ring-indigo-600"
+                  }`}
                 ></textarea>
+                {errors.message && (
+                  <p className="text-red-500 text-sm mt-1">{errors.message}</p>
+                )}
               </div>
 
               <button
